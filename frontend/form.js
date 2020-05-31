@@ -17,8 +17,18 @@ function takeinput(){
         xhttp.onload = function(){
             if(this.readyState==4 && this.status === 200){
             console.log(this.responseText)
-            document.getElementById("return").innerHTML = this.responseText;
-              
+            // document.getElementById("return").innerHTML = this.responseText;
+            data = JSON.parse(this.responseText)
+            console.log(data)
+            value = data['value']
+            console.log(value)
+            if (value == "welcome student"){
+                window.open("studentds.html")
+                alert("welcome student")}
+            else if(value =="welcome teacher"){
+                window.open("teacherds.html")
+                alert("welcome teacher")
+            }
         }
         else{
             console.log ("some error occured")

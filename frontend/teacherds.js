@@ -10,20 +10,45 @@ function seedetails(){
             data=JSON.parse(this.responseText);
             console.log(data)
             for (x in data){
-                value+="<tr><td>"+ Number(x)+1 +"</td><td>"+ data[x].name + "</td><td>"+ data[x].father_name+"</td><td>"
-                + data[x].email + "</td><td>"+ data[x].branch+"</td><td>"
+                value+="<tr><td>"+ data[x].lib_id+"</td><td>"+ data[x].name + "</td><td>"+ data[x].father_name+
+                "</td><td>"+ data[x].email + "</td><td>"+ data[x].branch+"</td><td>"
                 + data[x].section + "</td><td>"+ data[x].contact+"</td><td>"
-                + data[x].Dob + "</td><td>"+ data[x].address+"</td><td></td></td></tr>"
-
-                }
+                + data[x].Dob + "</td><td>"+ data[x].address+
+                "</td><td><button id ="+x+" onclick="+"input()"+">update</button></td><td><button>delete</button></td></tr>"
+                    
             document.getElementById("table").innerHTML= value;
+            } 
         }
     }
 }
     xhttp.send();
+    
 }
+function input(){
+    
+    window.open("update.html")
+}
+
+function update(){
+    obj={ lib_id:document.getElementById("lib_id").value}
+    myobj=JSON.stringify(obj);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST","http://127.0.0.1:8000/home/login/teacher/update",true);
+    xhttp.onreadystatechange=function(){
+        console.log(this.readyState)
+        xhttp.onload=function(){
+            if(this.readyState==4 && this.status==200){
+                console.log(this.responseText)
+                document.getElementById("confirmdata").innerHTML=this.responseText
+        }
+    };
+    xhttp.send(myobj);
+}
+}
+
 function addstudent(){
     myobj={
+        lib_id:document.getElementById("lib_id").value,
         name: document.getElementById("name").value,
         father_name: document.getElementById("fname").value,
         email: document.getElementById("email").value,

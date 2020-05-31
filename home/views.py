@@ -1,6 +1,5 @@
-from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest, Http404 , JsonResponse
-from .models import mark ,student ,teacher,login
+from .models import mark,teacher,login
 import json 
 login_data = login.objects.all()
 # Create your views here.
@@ -16,16 +15,26 @@ def loginpage(request):
         password = data["password"]
         for un in login_data:
             if username == un.username:
-                
+                a=(un.username)
+                strg=str(un.username)
+                b=(un.password)
                 if password == un.password:
-                    t ="logged in" 
-                    a=(un.username)
-                    b=(un.password)
-                    x={
-                        "a":a,"b":b,"o":t
-                    }
-                    y= json.dumps(x)
-                    break
+                    if strg[0] == "f":
+                        t="welcome teacher"
+                        x={
+                            "a":a,"b":b,"value":t
+                        }
+                        
+                        break
+                    else:
+                        t ="welcome student" 
+                        student_data=list(teacher.objects.filter(lib_id=username).values())
+                        
+                        x={
+                            "a":a,"b":student_data,"value":t
+                        }
+                        
+                        break
                 else:
                     y="give correct password"
             else:
@@ -33,10 +42,10 @@ def loginpage(request):
                 a=(un.username)
                 b=(un.password)
                 x={
-                    "a":a,"b":b,"o":t
+                    "a":a,"b":b,"value":t
                 }
-                y= json.dumps(x)
-    return HttpResponse(y)
+            
+    return JsonResponse(x, safe = False)
           # x="a"
         # uname = login.username
         # passw = login.password
@@ -70,3 +79,24 @@ def seedetails(request):
     if request.method == "POST":
         teacher_data = list(teacher.objects.all().values())
     return JsonResponse(teacher_data , safe= False)
+
+
+def update(request):
+    if request.method =="POST":
+
+    
+        body_unicode = request.body.decode('utf-8')
+        k = json.loads(body_unicode)
+        username=k['lib_id']
+        for i in teacher.objects.all():
+            if username ==i.lib_id:    
+                teacher.objects.filter(lib_id=username).update(**k)
+                p= "updated"
+            else:
+                p= "cant update give right lib id"
+
+
+    JsonResponse(p, safe= False)
+
+
+
